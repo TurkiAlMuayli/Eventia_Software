@@ -55,7 +55,7 @@ WSGI_APPLICATION = 'eventia_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'abdu114hf16$eventia_db',
+        'NAME': 'abdu114hf16$default',
         'USER': 'abdu114hf16',
         'PASSWORD': 'BackEndTeam',
         'HOST': 'abdu114hf16.mysql.pythonanywhere-services.com',
