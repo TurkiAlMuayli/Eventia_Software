@@ -10,11 +10,9 @@ from .serializers import OrganizerProfileSerializer, AttendeeProfileSerializer
 def update_profile(request):
     user = request.user
 
-    # Check if the user has an organizer profile
     if user.role == 'ORGANIZER' and hasattr(user, 'organizer_profile'):
         serializer = OrganizerProfileSerializer(user.organizer_profile, data=request.data, partial=True)
 
-    # Check if the user has an attendee profile
     elif user.role == 'ATTENDEE' and hasattr(user, 'attendee_profile'):
         serializer = AttendeeProfileSerializer(user.attendee_profile, data=request.data, partial=True)
 
