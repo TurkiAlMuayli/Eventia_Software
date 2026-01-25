@@ -1,68 +1,32 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
+class CustomUser(AbstractUser):
+    ROLE_CHOICES = (
+        ('ADMIN', 'Admin'),
+        ('ORGANIZER', 'Organizer'),
+        ('ATTENDEE', 'Attendee'),
+    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='ATTENDEE')
+    phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
 
-class User(AbstractUser):
-    class Roles(models.TextChoices):
-        ADMIN = "ADMIN", "Admin"
-        ORGANIZER = "ORGANIZER", "Organizer"
-        VENDOR = "VENDOR", "Vendor"
-        ATTENDEE = "ATTENDEE", "Attendee"
-
-    role = models.CharField(max_length=50, choices=Roles.choices, default=Roles.ATTENDEE)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
-
+    def __str__(self):
+        return self.username
 
 class OrganizerProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='organizer_profile')
-    organization_name = models.CharField(max_length=100)
-    license_number = models.CharField(max_length=50, blank=True, null=True)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='organizer_profile')
+    organization_name = models.CharField(max_length=100, blank=True)
+    commercial_record = models.CharField(max_length=50, blank=True)
+    website_url = models.URLField(max_length=200, blank=True)
+    bank_account_iban = models.CharField(max_length=34, blank=True)
 
     def __str__(self):
-        return self.organization_name
+        return f"{self.user.username} - Organizer"
 
-
-class VendorProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='vendor_profile')
-    business_name = models.CharField(max_length=100)
-    business_type = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.business_name
-
-
-class Event(models.Model):
-    class Status(models.TextChoices):
-        DRAFT = "Draft", "Draft"
-        PLANNING = "Planning", "Planning"
-        ACTIVE = "Active", "Active"
-        COMPLETED = "Completed", "Completed"
-
-    organizer = models.ForeignKey(OrganizerProfile, on_delete=models.CASCADE, related_name='events')
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    date = models.DateTimeField()
-    location = models.CharField(max_length=200)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+class AttendeeProfile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='attendee_profile')
+    date_of_birth = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=10, blank=True, choices=(('M', 'Male'), ('F', 'Female')))
 
     def __str__(self):
-        return self.title
-
-
-class VendorApplication(models.Model):
-    class AppStatus(models.TextChoices):
-        PENDING = "Processing", "Processing"
-        APPROVED = "Approved", "Approved"
-        REJECTED = "Rejected", "Rejected"
-
-    vendor = models.ForeignKey(VendorProfile, on_delete=models.CASCADE, related_name='applications')
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='vendor_applications')
-    booth_location = models.CharField(max_length=100, blank=True, null=True)
-    status = models.CharField(max_length=20, choices=AppStatus.choices, default=AppStatus.PENDING)
-    submission_date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.vendor.business_name} - {self.event.title}"
+        return f"{self.user.username} - Attendee"
