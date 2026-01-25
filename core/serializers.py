@@ -1,14 +1,29 @@
 from rest_framework import serializers
-from .models import Event, User
+from django.contrib.auth import get_user_model
+from .models import OrganizerProfile, AttendeeProfile
 
-class UserSerializer(serializers.ModelSerializer):
+User = get_user_model()
+
+class OrganizerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrganizerProfile
+        fields = ['organization_name', 'commercial_record', 'website_url', 'bank_account_iban']
+
+class AttendeeProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AttendeeProfile
+        fields = ['date_of_birth', 'gender']
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    organizer_profile = OrganizerProfileSerializer(read_only=True)
+    attendee_profile = AttendeeProfileSerializer(read_only=True)
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'role', 'phone_number']
+        fields = ['id', 'username', 'email', 'phone_number', 'role', 'organizer_profile', 'attendee_profile']
+        read_only_fields = ['id', 'role']
 
-class EventSerializer(serializers.ModelSerializer):
-    organizer_name = serializers.CharField(source='organizer.organization_name', read_only=True)
-
-    class Meta:
-        model = Event
-        fields = ['id', 'title', 'date', 'location', 'status', 'organizer_name']
+    def update(self, instance, validated_data):
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
+        instance.save()
+        return instance
