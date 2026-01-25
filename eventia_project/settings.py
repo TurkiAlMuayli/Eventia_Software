@@ -57,7 +57,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'abdu114hf16$eventia_db',
         'USER': 'abdu114hf16',
-        'PASSWORD': 'YOUR_DB_PASSWORD',
+        'PASSWORD': 'BackEndTeam',
         'HOST': 'abdu114hf16.mysql.pythonanywhere-services.com',
         'PORT': '3306',
         'OPTIONS': {
