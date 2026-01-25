@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -109,3 +110,5 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
