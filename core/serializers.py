@@ -29,8 +29,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    class CustomUserCreateSerializer(BaseUserCreateSerializer):
-        class Meta(BaseUserCreateSerializer.Meta):
-            model = User
-            # We override the fields to ensure role and phone_number are accepted during signup
-            fields = ('id', 'email', 'username', 'password', 'first_name', 'last_name', 'role', 'phone_number')
+class CustomUserCreateSerializer(BaseUserCreateSerializer):
+    class Meta(BaseUserCreateSerializer.Meta):
+        model = User
+        fields = ('id', 'email', 'username', 'password', 'first_name', 'last_name', 'role', 'phone_number')
