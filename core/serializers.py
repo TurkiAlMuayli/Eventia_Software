@@ -5,15 +5,18 @@ from .models import OrganizerProfile, AttendeeProfile
 
 User = get_user_model()
 
+
 class OrganizerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizerProfile
         fields = ['organization_name', 'commercial_record', 'website_url', 'bank_account_iban']
 
+
 class AttendeeProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendeeProfile
         fields = ['date_of_birth', 'gender']
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
     organizer_profile = OrganizerProfileSerializer(read_only=True)
@@ -29,7 +32,18 @@ class CustomUserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
 class CustomUserCreateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
         fields = ('id', 'email', 'username', 'password', 'first_name', 'last_name', 'role', 'phone_number')
+
+        # KEY CONFIGURATION:
+        # 1. username is now REQUIRED (Fixes the TypeError crash)
+        # 2. role is OPTIONAL (Allows default='ATTENDEE' to work)
+        extra_kwargs = {
+            'username': {'required': True},
+            'email': {'required': True},
+            'role': {'required': False},
+            'phone_number': {'required': False}
+        }

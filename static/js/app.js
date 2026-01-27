@@ -18,40 +18,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const csrftoken = getCookie('csrftoken');
 
     // --- 1. GLOBAL CONFIG & STATE ---
-    const API_BASE = '/auth'; // Relative path since frontend is inside Django
+    const API_BASE = '/auth';
     const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
 
     // --- 2. AUTHENTICATION HANDLERS ---
-
-    // A. UPDATE UI BASED ON AUTH STATE
     function updateUIState() {
         const guestLinks = document.getElementById('guest-nav-links');
         const userLinks = document.getElementById('user-nav-links');
         const heroCta = document.getElementById('hero-cta-btn');
 
         if (accessToken) {
-            // User is Logged In
             if (guestLinks) guestLinks.style.display = 'none';
-            if (userLinks) {
-                userLinks.style.display = 'flex';
-                // Optional: Decode token to get username if you want
-            }
+            if (userLinks) userLinks.style.display = 'flex';
             if (heroCta) {
                 heroCta.textContent = "Go to Dashboard";
-                heroCta.href = "#"; // Dashboard link
+                heroCta.href = "/admin/";
             }
         } else {
-            // User is Guest
             if (guestLinks) guestLinks.style.display = 'flex';
             if (userLinks) userLinks.style.display = 'none';
         }
     }
-
-    // Run UI update immediately
     updateUIState();
 
-    // B. LOGOUT LOGIC
+    // LOGOUT LOGIC
     const logoutBtn = document.getElementById('nav-logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', (e) => {
@@ -133,20 +123,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const signupDynamicContainer = document.getElementById('signup-dynamic-fields');
     const roleTabs = document.querySelectorAll('.role-tab');
-    let currentRole = 'organizer'; // Default
+    let currentRole = 'organizer';
 
-    // Initialize Signup
     if (signupDynamicContainer) {
         updateSignupFields('organizer');
-
-        // Tab Switching Logic
         roleTabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                // Update Visuals
                 tab.parentElement.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
-
-                // Update State & Content
                 currentRole = tab.dataset.role;
                 if (tab.dataset.target === 'signup') {
                     updateSignupFields(currentRole);
@@ -161,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!signupDynamicContainer) return;
         signupDynamicContainer.innerHTML = roleFields[role] || '';
     }
-
 
     // --- 4. FORM SUBMISSION LOGIC ---
 
@@ -183,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': csrftoken // FIXED: Moved inside headers
+                        'X-CSRFToken': csrftoken
                     },
                     body: JSON.stringify({ email, password })
                 });
@@ -193,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     localStorage.setItem('accessToken', data.access);
                     localStorage.setItem('refreshToken', data.refresh);
-                    window.location.href = '/'; // Redirect Home
+                    window.location.href = '/';
                 } else {
                     alert('Login Failed: ' + (data.detail || 'Invalid credentials'));
                 }
@@ -215,25 +198,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const btn = signupForm.querySelector('button[type="submit"]');
             btn.disabled = true;
 
-            // 1. Gather Data based on Dynamic Inputs
-            const formData = {
+            // 1. Gather Basic Data (Required for ALL roles)
+            let formData = {
                 email: document.getElementById('field-email')?.value,
-                password: document.getElementById('field-password')?.value,
-                re_password: document.getElementById('field-re_password')?.value,
                 username: document.getElementById('field-username')?.value || document.getElementById('field-email')?.value.split('@')[0],
-
-                // FIXED: Field names now match Django models.py exactly
-                role: currentRole.toUpperCase(), // Convert 'organizer' -> 'ORGANIZER' to match choices
-                phone_number: document.getElementById('field-phone')?.value || '', // Changed from 'phone' to 'phone_number'
-                first_name: document.getElementById('field-name')?.value || ''    // Changed from 'full_name' to 'first_name'
+                password: document.getElementById('field-password')?.value,
+                re_password: document.getElementById('field-re_password')?.value
             };
+
+            // 2. Add Extra Fields ONLY if NOT an Attendee
+            // This ensures Attendees send strictly minimal data
+            if (currentRole !== 'attendee') {
+                formData.role = currentRole.toUpperCase();
+                formData.phone_number = document.getElementById('field-phone')?.value || '';
+                formData.first_name = document.getElementById('field-name')?.value || '';
+            }
 
             try {
                 const response = await fetch(`${API_BASE}/users/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': csrftoken // FIXED: Added CSRF Token
+                        'X-CSRFToken': csrftoken
                     },
                     body: JSON.stringify(formData)
                 });
@@ -244,7 +230,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     const data = await response.json();
                     let errorMsg = 'Signup Failed:\n';
-                    // Parse Django Error Object
                     for (const [key, value] of Object.entries(data)) {
                         errorMsg += `${key}: ${value}\n`;
                     }
