@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventia | Events Management Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo" id="nav-logo">
+                <img src="{% static 'assets/logo_fixed.png' %}" alt="Eventia Logo" class="logo-img">
+            </a>
+            <div class="nav-links">
+                <a href="/" class="btn-text" id="nav-home-btn">Home</a>
+
+                <div id="guest-nav-links" style="display: flex; gap: 1rem;">
+                    <a href="/login/" class="btn btn-outline" id="nav-login-btn">Log In</a>
+                    <a href="/signup/" class="btn btn-primary" id="nav-signup-btn">Sign Up</a>
+                </div>
+
+                <div id="user-nav-links" style="display: none; gap: 1rem; align-items: center;">
+                    <span id="user-greeting" style="font-weight: 600; font-size: 0.9rem;">Hello, User</span>
+                    <a href="#" class="btn btn-outline" id="nav-logout-btn">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+
+        <section id="guest-view" class="view-section active">
+            <div class="hero-section">
+                <div class="hero-text">
+                    <h1>Discover & Manage <br><span>Exceptional Events</span></h1>
+                    <p>The centralized platform for seamless event management in Saudi Arabia. Connect with organizers, vendors, and attendees in one place.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" id="hero-browse-btn">Browse Events</button>
+                        <a href="/signup/" class="btn btn-outline" id="hero-cta-btn">Create Event</a>
+                    </div>
+                </div>
+                <div class="hero-image-placeholder">
+                    <div class="abstract-card card-1">
+                        <i class="fa-solid fa-calendar-star"></i>
+                        <span>Premium Events</span>
+                    </div>
+                    <div class="abstract-card card-2">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Networking</span>
+                    </div>
+                </div>
+            </div>
+
+            </section>
+    </main>
+
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>

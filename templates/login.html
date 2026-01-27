@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log In | Eventia</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo">
+                <img src="{% static 'assets/logo_fixed.png' %}" alt="Eventia Logo" class="logo-img">
+            </a>
+            <div class="nav-links">
+                <a href="/" class="btn-text">Home</a>
+                <a href="/signup/" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+        <div id="login-form-container" class="auth-form-container">
+            <div class="form-header">
+                <h2>Welcome Back</h2>
+                <p>Login to access your dashboard</p>
+            </div>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" placeholder="name@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </form>
+
+            <div class="form-footer">
+                <p>New to Eventia? <a href="/signup/">Create an account</a></p>
+            </div>
+        </div>
+    </main>
+
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
