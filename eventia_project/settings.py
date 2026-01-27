@@ -7,7 +7,19 @@ SECRET_KEY = 'django-insecure-v__z3uj-b!!yjbg_)l1ollq^2&gx*k@s1-9w*w13=*$pe#vsdz
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['abdu114hf16.pythonanywhere.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'abdu114hf16.pythonanywhere.com',
+    'localhost',
+    '127.0.0.1',
+    'www.eventia.software',
+    'eventia.software',
+    '.eventia.software'
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://www.eventia.software',
+    'https://eventia.software'
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
