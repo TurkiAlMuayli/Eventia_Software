@@ -1,5 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
+    // --- HELPER: GET CSRF TOKEN FROM COOKIE ---
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
     // --- 1. GLOBAL CONFIG & STATE ---
     const API_BASE = '/auth'; // Relative path since frontend is inside Django
     const accessToken = localStorage.getItem('accessToken');
@@ -30,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (userLinks) userLinks.style.display = 'none';
         }
     }
-    
+
     // Run UI update immediately
     updateUIState();
 
@@ -46,8 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 3. DYNAMIC FORMS (SIGNUP) ---
-    // (Keep your existing HTML strings for roleFields here, just ensured they have name attributes or classes for selection)
-    
     const roleFields = {
         organizer: `
             <div class="input-group">
@@ -123,14 +138,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize Signup
     if (signupDynamicContainer) {
         updateSignupFields('organizer');
-        
+
         // Tab Switching Logic
         roleTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 // Update Visuals
                 tab.parentElement.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
-                
+
                 // Update State & Content
                 currentRole = tab.dataset.role;
                 if (tab.dataset.target === 'signup') {
@@ -166,8 +181,11 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const response = await fetch(`${API_BASE}/jwt/create/`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password }) // Note: Djoser usually requires 'username' unless configured for email
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken // FIXED: Moved inside headers
+                    },
+                    body: JSON.stringify({ email, password })
                 });
 
                 const data = await response.json();
@@ -198,22 +216,25 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = true;
 
             // 1. Gather Data based on Dynamic Inputs
-            // We select elements by the IDs we added in the HTML strings above
             const formData = {
                 email: document.getElementById('field-email')?.value,
                 password: document.getElementById('field-password')?.value,
                 re_password: document.getElementById('field-re_password')?.value,
-                username: document.getElementById('field-username')?.value || document.getElementById('field-email')?.value.split('@')[0], // Fallback username
-                // Extra fields (These will be ignored by default Djoser User model unless you customized it)
-                role: currentRole, 
-                phone: document.getElementById('field-phone')?.value || '',
-                full_name: document.getElementById('field-name')?.value || ''
+                username: document.getElementById('field-username')?.value || document.getElementById('field-email')?.value.split('@')[0],
+
+                // FIXED: Field names now match Django models.py exactly
+                role: currentRole.toUpperCase(), // Convert 'organizer' -> 'ORGANIZER' to match choices
+                phone_number: document.getElementById('field-phone')?.value || '', // Changed from 'phone' to 'phone_number'
+                first_name: document.getElementById('field-name')?.value || ''    // Changed from 'full_name' to 'first_name'
             };
 
             try {
                 const response = await fetch(`${API_BASE}/users/`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken // FIXED: Added CSRF Token
+                    },
                     body: JSON.stringify(formData)
                 });
 
@@ -230,6 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert(errorMsg);
                 }
             } catch (error) {
+                console.error(error);
                 alert('Network Error during Signup');
             } finally {
                 btn.disabled = false;
