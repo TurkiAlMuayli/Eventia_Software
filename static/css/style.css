@@ -516,6 +516,46 @@ body {
     .hero-buttons {
         justify-content: center;
     }
+
+    .auth-card-wrapper {
+        padding-top: 2rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .auth-form-container {
+        padding: 1.5rem;
+        max-width: 100%;
+    }
+
+    /* Mobile Nav Tweaks */
+    .navbar {
+        height: 60px;
+        padding: 0 0.5rem;
+    }
+
+    .logo-img {
+        height: 40px;
+    }
+
+    .nav-links {
+        gap: 0.5rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    /* Mobile Events Grid */
+    .events-container {
+        padding: 2rem 1rem 4rem;
+    }
+
+    .events-grid {
+        grid-template-columns: 1fr;
+        /* Force single column on mobile */
+    }
 }
 
 /* --- Date Inputs --- */
@@ -574,4 +614,13 @@ body {
 
 .input-success {
     border-color: #2ecc71 !important;
+}
+
+/* --- Password Policy Text --- */
+.password-policy-text {
+    font-size: 0.75rem;
+    color: black;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    line-height: 1.3;
 }
