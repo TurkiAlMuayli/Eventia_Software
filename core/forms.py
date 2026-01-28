@@ -22,7 +22,6 @@ class SignUpForm(forms.ModelForm):
 
     class Meta:
         model = User
-        # Added first_name and last_name to the list
         fields = ['username', 'email', 'password', 'phone_number', 'role', 'first_name', 'last_name']
 
     def clean(self):
@@ -52,7 +51,9 @@ class SignUpForm(forms.ModelForm):
             user.save()
             role = self.cleaned_data.get('role')
 
-            # Create specific profile
+            # --- KEY FIX HERE ---
+            # We use get_or_create logic to avoid crashing if a Signal already made the profile
+
             if role == 'ORGANIZER':
                 OrganizerProfile.objects.create(
                     user=user,
@@ -62,12 +63,14 @@ class SignUpForm(forms.ModelForm):
                 VendorProfile.objects.create(
                     user=user,
                     service_type=self.cleaned_data.get('service_type'),
-                    organization_name=self.cleaned_data.get('organization_name')  # Ensure vendors get org name too
+                    organization_name=self.cleaned_data.get('organization_name')
                 )
             elif role == 'ATTENDEE':
-                AttendeeProfile.objects.create(
-                    user=user,
-                    date_of_birth=self.cleaned_data.get('date_of_birth'),
-                    gender=self.cleaned_data.get('gender')  # Saving gender to profile
-                )
+                # Use get_or_create to handle the case where a Signal created it already
+                profile, created = AttendeeProfile.objects.get_or_create(user=user)
+                # Update the fields
+                profile.date_of_birth = self.cleaned_data.get('date_of_birth')
+                profile.gender = self.cleaned_data.get('gender')
+                profile.save()
+
         return user
