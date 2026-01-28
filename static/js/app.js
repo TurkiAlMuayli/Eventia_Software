@@ -100,6 +100,23 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
 
             <div class="input-group">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="abdulrahman123" required>
+            </div>
+
+            <div class="form-row" style="display: flex; gap: 10px;">
+                <div class="input-group" style="flex: 1;">
+                    <label>Email Address</label>
+                    <input type="email" name="email" class="signup-email" placeholder="name@example.com" required>
+                </div>
+                <div class="input-group" style="flex: 1;">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone_number" placeholder="+966 5x..." required>
+                </div>
+            </div>
+            <div class="error-message email-error">Please enter a valid email address</div>
+
+            <div class="input-group">
                 <label>Gender</label>
                 <select name="gender" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 1rem; background: transparent;" required>
                     <option value="" disabled selected>Select Gender</option>
@@ -112,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <label>Date of Birth</label>
                 <input type="date" name="date_of_birth" class="date-input" style="width: 100%; padding: 0.8rem;" required>
             </div>
+
             <div class="input-group">
                 <label>Password</label>
                 <input type="password" name="password" class="signup-password" placeholder="Create a strong password" required>
