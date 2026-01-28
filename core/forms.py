@@ -10,6 +10,11 @@ class SignUpForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput)
     role = forms.ChoiceField(choices=User.ROLE_CHOICES)
 
+    # --- NEW FIELDS ---
+    first_name = forms.CharField(required=False)
+    last_name = forms.CharField(required=False)
+    gender = forms.ChoiceField(choices=[('M', 'Male'), ('F', 'Female')], required=False)
+
     # Extra fields for profiles
     organization_name = forms.CharField(required=False)
     service_type = forms.CharField(required=False)
@@ -17,7 +22,8 @@ class SignUpForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'phone_number', 'role']
+        # Added first_name and last_name to the list
+        fields = ['username', 'email', 'password', 'phone_number', 'role', 'first_name', 'last_name']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -37,6 +43,11 @@ class SignUpForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])
+
+        # Explicitly save the names to the User model
+        user.first_name = self.cleaned_data.get("first_name", "")
+        user.last_name = self.cleaned_data.get("last_name", "")
+
         if commit:
             user.save()
             role = self.cleaned_data.get('role')
@@ -50,11 +61,13 @@ class SignUpForm(forms.ModelForm):
             elif role == 'VENDOR':
                 VendorProfile.objects.create(
                     user=user,
-                    service_type=self.cleaned_data.get('service_type')
+                    service_type=self.cleaned_data.get('service_type'),
+                    organization_name=self.cleaned_data.get('organization_name')  # Ensure vendors get org name too
                 )
             elif role == 'ATTENDEE':
                 AttendeeProfile.objects.create(
                     user=user,
-                    date_of_birth=self.cleaned_data.get('date_of_birth')
+                    date_of_birth=self.cleaned_data.get('date_of_birth'),
+                    gender=self.cleaned_data.get('gender')  # Saving gender to profile
                 )
         return user
