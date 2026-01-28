@@ -1,49 +1,86 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
-from .models import OrganizerProfile, AttendeeProfile
+from .models import Organizer, Vendor, Attendee, Guest, Event, Feedback
+from django.contrib.auth.hashers import make_password
 
-User = get_user_model()
-
-
-class OrganizerProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrganizerProfile
-        fields = ['organization_name', 'commercial_record', 'website_url', 'bank_account_iban']
-
-
-class AttendeeProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AttendeeProfile
-        fields = ['date_of_birth', 'gender']
-
-
-class CustomUserSerializer(serializers.ModelSerializer):
-    organizer_profile = OrganizerProfileSerializer(read_only=True)
-    attendee_profile = AttendeeProfileSerializer(read_only=True)
+# -----------------------------
+# Organizer Serializer
+# -----------------------------
+class OrganizerSerializer(serializers.ModelSerializer):
+    role = serializers.CharField(default='ORGANIZER', read_only=True)
 
     class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'phone_number', 'role', 'organizer_profile', 'attendee_profile']
-        read_only_fields = ['id', 'role']
-
-    def update(self, instance, validated_data):
-        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
-        instance.save()
-        return instance
-
-
-class CustomUserCreateSerializer(BaseUserCreateSerializer):
-    class Meta(BaseUserCreateSerializer.Meta):
-        model = User
-        fields = ('id', 'email', 'username', 'password', 'first_name', 'last_name', 'role', 'phone_number')
-
-        # KEY CONFIGURATION:
-        # 1. username is now REQUIRED (Fixes the TypeError crash)
-        # 2. role is OPTIONAL (Allows default='ATTENDEE' to work)
+        model = Organizer
+        fields = ['organizer_id', 'name', 'password', 'email', 'phone_number', 'profile_picture', 'role']
         extra_kwargs = {
-            'username': {'required': True},
-            'email': {'required': True},
-            'role': {'required': False},
-            'phone_number': {'required': False}
+            'password': {'write_only': True}
         }
+
+    def create(self, validated_data):
+        validated_data['password'] = make_password(validated_data['password'])
+        return super().create(validated_data)
+
+
+# -----------------------------
+# Vendor Serializer
+# -----------------------------
+class VendorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vendor
+        fields = [
+            'vendor_id', 'username', 'name', 'password', 'email', 'phone_number',
+            'service_type', 'profile_picture', 'description'
+        ]
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def create(self, validated_data):
+        validated_data['password'] = make_password(validated_data['password'])
+        return super().create(validated_data)
+
+
+# -----------------------------
+# Attendee Serializer
+# -----------------------------
+class AttendeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendee
+        fields = [
+            'attendee_id', 'username', 'name', 'password', 'email', 'phone_number',
+            'gender', 'birthdate', 'preferences', 'profile_picture'
+        ]
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def create(self, validated_data):
+        validated_data['password'] = make_password(validated_data['password'])
+        return super().create(validated_data)
+
+
+# -----------------------------
+# Guest Serializer
+# -----------------------------
+class GuestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Guest
+        fields = ['guest_id', 'phone_number', 'email', 'session_duration']
+
+
+# -----------------------------
+# Event Serializer
+# -----------------------------
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = '__all__'
+
+
+# -----------------------------
+# Feedback Serializer
+# -----------------------------
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = ['submission_date', 'comment', 'rating', 'attendee', 'event']
+
