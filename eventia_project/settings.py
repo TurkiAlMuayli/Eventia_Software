@@ -102,13 +102,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-
 AUTH_USER_MODEL = 'core.CustomUser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LOGIN_URL = 'login'
-
 
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
@@ -121,3 +119,7 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+LOGIN_REDIRECT_URL = 'dashboard'
+
+LOGOUT_REDIRECT_URL = 'login'
