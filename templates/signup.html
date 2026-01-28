@@ -1,54 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Sign Up | Eventia</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="/" class="logo">
-                <img src="{% static 'assets/logo_fixed.png' %}" alt="Eventia Logo" class="logo-img">
-            </a>
-            <div class="nav-links">
-                <a href="/" class="btn-text">Home</a>
-                <a href="/login/" class="btn btn-outline">Log In</a>
-            </div>
-        </div>
-    </nav>
+<div class="signup-container">
+    <h2>Create Account</h2>
 
-    <main class="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
-        <div id="signup-form-container" class="auth-form-container">
-            <div class="form-header">
-                <h2>Create Account</h2>
-                <p>Join Eventia today</p>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="role-tabs">
+        <button type="button" class="role-tab active" onclick="setRole('organizer')">Organizer</button>
+        <button type="button" class="role-tab" onclick="setRole('vendor')">Vendor</button>
+        <button type="button" class="role-tab" onclick="setRole('attendee')">Attendee</button>
+    </div>
+
+    <form method="POST" action="{% url 'signup' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <input type="hidden" name="role" id="selected-role" value="organizer">
+
+        <div id="signup-dynamic-fields">
             </div>
 
-            <div class="role-selector">
-                <label>Register as:</label>
-                <div class="role-tabs">
-                    <div class="role-tab active" data-target="signup" data-role="organizer">Organizer</div>
-                    <div class="role-tab" data-target="signup" data-role="vendor">Vendor</div>
-                    <div class="role-tab" data-target="signup" data-role="attendee">Attendee</div>
-                </div>
-            </div>
+        <button type="submit" class="btn-primary">Sign Up</button>
+    </form>
+</div>
 
-            <form id="signup-form">
-                <div id="signup-dynamic-fields"></div>
+<script>
+    // Define the HTML for each role (Matches forms.py names)
+    const roleTemplates = {
+        organizer: `
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <input type="text" name="phone_number" placeholder="Phone Number" required>
+            <input type="password" name="password1" placeholder="Password" required>
+            <input type="password" name="password2" placeholder="Confirm Password" required>
+        `,
+        vendor: `
+            <input type="text" name="name" placeholder="Organization Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="service_type" placeholder="Service Type" required>
+            <input type="text" name="phone_number" placeholder="Phone" required>
+            <input type="password" name="password1" placeholder="Password" required>
+            <input type="password" name="password2" placeholder="Confirm Password" required>
+        `,
+        attendee: `
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="phone_number" placeholder="Phone" required>
+            <input type="password" name="password1" placeholder="Password" required>
+            <input type="password" name="password2" placeholder="Confirm Password" required>
+        `
+    };
 
-                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 1rem;">
-                    Sign Up as <span class="current-role-text">Organizer</span>
-                </button>
-            </form>
+    function setRole(role) {
+        // 1. Update Hidden Input
+        document.getElementById('selected-role').value = role;
 
-            <div class="form-footer">
-                <p>Already have an account? <a href="/login/">Log in</a></p>
-            </div>
-        </div>
-    </main>
+        // 2. Render Fields
+        document.getElementById('signup-dynamic-fields').innerHTML = roleTemplates[role];
 
-    <script src="{% static 'js/app.js' %}"></script>
-</body>
-</html>
+        // 3. Update Tab Styling (Optional logic to highlight active button)
+        document.querySelectorAll('.role-tab').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => setRole('organizer'));
+</script>

@@ -1,20 +1,7 @@
-from django.contrib import admin
-from django.urls import path, include
-from django.views.generic import TemplateView
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    # BackEnd & APIs Side
-    path('admin/', admin.site.urls),
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.jwt')),
-
-    # FrontEnd Side
-    # index.html - home page
-    path('', TemplateView.as_view(template_name='index.html'), name='home'),
-
-    # login.html - /login/
-    path('login/', TemplateView.as_view(template_name='login.html'), name='login'),
-
-    # signup.html - /signup/
-    path('signup/', TemplateView.as_view(template_name='signup.html'), name='signup'),
+    path('signup/', views.signup_view, name='signup'),
+    path('login/', views.login_view, name='login'),
 ]
