@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,52 +15,43 @@
 
 <body>
 
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="logo" id="nav-logo">
-                <img src="assets/logo_fixed.png" alt="Eventia Logo" class="logo-img">
+            <a href="{% url 'index' %}" class="logo" id="nav-logo">
+                <img src="{% static 'assets/logo_fixed.png' %}" alt="Eventia Logo" class="logo-img">
             </a>
             <div class="nav-links">
-                <a href="index.html" class="btn-text">Home</a>
-                <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                <a href="{% url 'index' %}" class="btn-text">Home</a>
+                <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
             </div>
         </div>
     </nav>
 
-    <!-- MAIN APP CONTAINER -->
-    <main class="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+    <main class="main-content" style="display: flex; justify-content: center; align-items: center;">
 
-        <!-- Background Elements -->
-        <div class="bg-shape shape-1"></div>
-        <div class="bg-shape shape-2"></div>
-
-        <!-- LOGIN FORM -->
         <div id="login-form-container" class="auth-form-container">
             <div class="form-header">
                 <h2>Welcome Back</h2>
-                <p>Login to access your dashboard</p>
+                <p>Log in to access your dashboard</p>
             </div>
 
-            <!-- Role Selector for Login -->
-            <div class="role-selector">
-                <label>I am a(n):</label>
-                <div class="role-tabs">
-                    <div class="role-tab active" data-target="login" data-role="organizer">Organizer</div>
-                    <div class="role-tab" data-target="login" data-role="vendor">Vendor</div>
-                    <div class="role-tab" data-target="login" data-role="attendee">Attendee</div>
-                </div>
-            </div>
+            {% if messages %}
+                <ul class="messages" style="color: red; list-style: none; padding: 0;">
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
 
-            <form id="login-form">
+            <form id="login-form" method="POST" action="{% url 'login' %}">
                 {% csrf_token %}
                 <div class="input-group">
-                    <label for="login-email">Email Address or Phone Number</label>
-                    <input type="email" id="login-email" placeholder="" required>
+                    <label for="login-username">Username</label>
+                    <input type="text" name="username" id="login-username" placeholder="" required>
                 </div>
                 <div class="input-group">
                     <label for="login-password">Password</label>
-                    <input type="password" id="login-password" placeholder="••••••••" required>
+                    <input type="password" name="password" id="login-password" placeholder="••••••••" required>
                 </div>
 
                 <div class="form-actions">
@@ -72,13 +62,13 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block">
-                    Sign In as <span class="current-role-text">Organizer</span>
+                    Sign In
                 </button>
             </form>
 
             <div class="form-footer">
-                <p>New to Eventia? <a href="signup.html" id="link-to-signup">Create an account</a></p>
-                <a href="index.html" class="back-to-home">Back to Home</a>
+                <p>New to Eventia? <a href="{% url 'signup' %}" id="link-to-signup">Create an account</a></p>
+                <a href="{% url 'index' %}" class="back-to-home">Back to Home</a>
             </div>
         </div>
 
@@ -86,5 +76,4 @@
 
     <script src="{% static 'js/app.js' %}"></script>
 </body>
-
 </html>

@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,35 +15,44 @@
 
 <body>
 
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="logo" id="nav-logo">
-                <img src="assets/logo_fixed.png" alt="Eventia Logo" class="logo-img">
+            <a href="{% url 'index' %}" class="logo" id="nav-logo">
+                <img src="{% static 'assets/logo_fixed.png' %}" alt="Eventia Logo" class="logo-img">
             </a>
             <div class="nav-links">
-                <a href="index.html" class="btn-text">Home</a>
-                <a href="login.html" class="btn btn-outline">Log In</a>
+                <a href="{% url 'index' %}" class="btn-text">Home</a>
+                <a href="{% url 'login' %}" class="btn btn-outline">Log In</a>
             </div>
         </div>
     </nav>
 
-    <!-- MAIN APP CONTAINER -->
-    <main class="main-content"
-        style="display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 2rem 0;">
+    <main class="main-content" style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px);">
 
-        <!-- Background Elements -->
         <div class="bg-shape shape-1"></div>
         <div class="bg-shape shape-2"></div>
 
-        <!-- SIGNUP FORM -->
         <div id="signup-form-container" class="auth-form-container">
             <div class="form-header">
                 <h2>Create Account</h2>
                 <p>Join Eventia today</p>
             </div>
 
-            <!-- Role Selector for Signup -->
+            {% if form.errors %}
+            <div class="alert alert-danger" style="color: red; margin-bottom: 10px;">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
             <div class="role-selector">
                 <label>Register as:</label>
                 <div class="role-tabs">
@@ -54,13 +62,11 @@
                 </div>
             </div>
 
-            <form id="signup-form">
+            <form id="signup-form" method="POST" action="{% url 'signup' %}">
                 {% csrf_token %}
+                <input type="hidden" name="role" id="role-input" value="ORGANIZER">
 
-                <!-- Dynamic Fields -->
-                <div id="signup-dynamic-fields">
-                    <!-- Injected via JS -->
-                </div>
+                <div id="signup-dynamic-fields"></div>
 
                 <button type="submit" class="btn btn-primary btn-block">
                     Sign Up as <span class="current-role-text">Organizer</span>
@@ -68,8 +74,8 @@
             </form>
 
             <div class="form-footer">
-                <p>Already have an account? <a href="login.html" id="link-to-login">Log in</a></p>
-                <a href="index.html" class="back-to-home">Back to Home</a>
+                <p>Already have an account? <a href="{% url 'login' %}" id="link-to-login">Log in</a></p>
+                <a href="{% url 'index' %}" class="back-to-home">Back to Home</a>
             </div>
         </div>
 
@@ -77,5 +83,4 @@
 
     <script src="{% static 'js/app.js' %}"></script>
 </body>
-
 </html>
