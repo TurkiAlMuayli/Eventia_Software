@@ -101,14 +101,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 <label>Phone Number</label>
                 <input type="tel" name="phone_number" placeholder="+966 5x xxx xxxx" required>
             </div>
+
             <div class="input-group">
                 <label>Gender</label>
-                <select name="gender" required>
+                <select name="gender" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 1rem; background: transparent;" required>
                     <option value="" disabled selected>Select Gender</option>
                     <option value="M">Male</option>
                     <option value="F">Female</option>
                 </select>
             </div>
+
             <div class="input-group">
                 <label>Date of Birth</label>
                 <input type="date" name="date_of_birth" class="date-input" style="width: 100%; padding: 0.8rem;" required>
