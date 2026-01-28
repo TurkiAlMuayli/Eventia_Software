@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,43 +16,52 @@
 
 <body>
 
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="container nav-container">
-            <a href="{% url 'index' %}" class="logo" id="nav-logo">
-                <img src="{% static 'assets/logo_fixed.png' %}" alt="Eventia Logo" class="logo-img">
+            <a href="index.html" class="logo" id="nav-logo">
+                <img src="assets/logo_fixed.png" alt="Eventia Logo" class="logo-img">
             </a>
             <div class="nav-links">
-                <a href="{% url 'index' %}" class="btn-text">Home</a>
-                <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+                <a href="index.html" class="btn-text">Home</a>
+                <a href="signup.html" class="btn btn-primary">Sign Up</a>
             </div>
         </div>
     </nav>
 
-    <main class="main-content" style="display: flex; justify-content: center; align-items: center;">
+    <!-- MAIN APP CONTAINER -->
+    <main class="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
 
+        <!-- Background Elements -->
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+
+        <!-- LOGIN FORM -->
         <div id="login-form-container" class="auth-form-container">
             <div class="form-header">
                 <h2>Welcome Back</h2>
-                <p>Log in to access your dashboard</p>
+                <p>Login to access your dashboard</p>
             </div>
 
-            {% if messages %}
-                <ul class="messages" style="list-style: none; color: red; padding: 0; margin-bottom: 1rem;">
-                    {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+            <!-- Role Selector for Login -->
+            <div class="role-selector">
+                <label>I am a(n):</label>
+                <div class="role-tabs">
+                    <div class="role-tab active" data-target="login" data-role="organizer">Organizer</div>
+                    <div class="role-tab" data-target="login" data-role="vendor">Vendor</div>
+                    <div class="role-tab" data-target="login" data-role="attendee">Attendee</div>
+                </div>
+            </div>
 
-            <form id="login-form" method="POST" action="{% url 'login' %}">
+            <form id="login-form">
                 {% csrf_token %}
                 <div class="input-group">
-                    <label for="login-username">Username</label>
-                    <input type="text" name="username" id="login-username" placeholder="" required>
+                    <label for="login-email">Email Address or Phone Number</label>
+                    <input type="email" id="login-email" placeholder="" required>
                 </div>
                 <div class="input-group">
                     <label for="login-password">Password</label>
-                    <input type="password" name="password" id="login-password" placeholder="••••••••" required>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
                 </div>
 
                 <div class="form-actions">
@@ -62,13 +72,13 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block">
-                    Sign In
+                    Sign In as <span class="current-role-text">Organizer</span>
                 </button>
             </form>
 
             <div class="form-footer">
-                <p>New to Eventia? <a href="{% url 'signup' %}" id="link-to-signup">Create an account</a></p>
-                <a href="{% url 'index' %}" class="back-to-home">Back to Home</a>
+                <p>New to Eventia? <a href="signup.html" id="link-to-signup">Create an account</a></p>
+                <a href="index.html" class="back-to-home">Back to Home</a>
             </div>
         </div>
 
@@ -76,4 +86,5 @@
 
     <script src="{% static 'js/app.js' %}"></script>
 </body>
+
 </html>
