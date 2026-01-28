@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Navigation ---
+    // --- Navigation & View Management ---
     const heroBrowseBtn = document.getElementById('hero-browse-btn');
     if (heroBrowseBtn) {
         heroBrowseBtn.addEventListener('click', () => {
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Role Management (Login & Signup) ---
-    // IMPORTANT: 'name' attributes added to match Django forms.py
+    // ADDED: 'name' attributes to match Django forms.py
     const roleFields = {
         organizer: `
             <div class="input-group">
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <label>Password</label>
                 <input type="password" name="password" class="signup-password" placeholder="Create a strong password" required>
                 <div class="password-policy-text">
-                    At least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char.
+                    Password must include: At least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number, 1 special character.
                 </div>
                 <div class="error-message password-strength-error"></div>
             </div>
@@ -50,12 +50,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="text" name="username" placeholder="Choose a username" required>
             </div>
             <div class="input-group">
+                <label>Organization Name</label>
+                <input type="text" name="organization_name" placeholder="Event Services Ltd." required>
+            </div>
+            <div class="input-group">
                 <label>Phone Number</label>
                 <input type="tel" name="phone_number" placeholder="+966 5x xxx xxxx" required>
             </div>
             <div class="input-group">
                 <label>Service Type</label>
-                <select name="service_type" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 1rem; background: transparent;">
+                <select name="service_type" required>
                     <option value="" disabled selected>Select Service Type</option>
                     <option value="catering">Catering</option>
                     <option value="venue">Venue</option>
@@ -73,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <label>Password</label>
                 <input type="password" name="password" class="signup-password" placeholder="Create a strong password" required>
                 <div class="password-policy-text">
-                    At least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char.
+                    Password must include: At least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number, 1 special character.
                 </div>
                 <div class="error-message password-strength-error"></div>
             </div>
@@ -98,6 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="tel" name="phone_number" placeholder="+966 5x xxx xxxx" required>
             </div>
             <div class="input-group">
+                <label>Gender</label>
+                <select name="gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+            </div>
+            <div class="input-group">
                 <label>Date of Birth</label>
                 <input type="date" name="date_of_birth" class="date-input" style="width: 100%; padding: 0.8rem;" required>
             </div>
@@ -105,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <label>Password</label>
                 <input type="password" name="password" class="signup-password" placeholder="Create a strong password" required>
                 <div class="password-policy-text">
-                    At least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char.
+                    Password must include: At least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number, 1 special character.
                 </div>
                 <div class="error-message password-strength-error"></div>
             </div>
@@ -119,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const roleTabs = document.querySelectorAll('.role-tab');
     const signupDynamicContainer = document.getElementById('signup-dynamic-fields');
-    const roleInput = document.getElementById('role-input'); // The hidden input for Django
+    const roleInput = document.getElementById('role-input'); // Django Hidden Input
 
     // Initialize Signup Fields
     if (signupDynamicContainer) updateSignupFields('organizer');
@@ -129,25 +141,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetForm = tab.dataset.target; // 'login' or 'signup'
             const role = tab.dataset.role;
 
-            // 1. Visual Tabs Update
+            // 1. Update Tabs Visual State
             const parent = tab.parentElement;
             if (parent) {
                 parent.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
             }
             tab.classList.add('active');
 
-            // 2. Update Button Text
+            // 2. Update Submit Button Text
             const formContainer = document.getElementById(`${targetForm}-form-container`);
             if (formContainer) {
                 const btnSpan = formContainer.querySelector('.current-role-text');
                 if (btnSpan) btnSpan.textContent = role.charAt(0).toUpperCase() + role.slice(1);
             }
 
-            // 3. Inject Fields & Update Hidden Django Input
+            // 3. If Signup, inject fully dynamic fields
             if (targetForm === 'signup' && signupDynamicContainer) {
                 updateSignupFields(role);
+                // Update Django hidden input
                 if (roleInput) {
-                    // Convert to uppercase to match Django CHOICES (ORGANIZER, VENDOR, ATTENDEE)
                     roleInput.value = role.toUpperCase();
                 }
             }
@@ -161,9 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
             signupDynamicContainer.innerHTML = roleFields[role] || '';
             signupDynamicContainer.style.opacity = '1';
 
-            // Re-attach validators since HTML was replaced
+            // Attach Password Validators after injection
             attachPasswordValidators();
             attachEmailCleaners();
+
         }, 200);
     }
 
@@ -188,9 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!passwordInput || !confirmInput) return;
 
-        // Clear errors on input
+        // Clear error when user starts typing again
         passwordInput.addEventListener('input', () => {
             if (passwordInput.classList.contains('input-error')) {
+                const strengthError = signupDynamicContainer.querySelector('.password-strength-error');
                 if (strengthError) strengthError.classList.remove('visible');
                 passwordInput.classList.remove('input-error');
             }
@@ -198,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         confirmInput.addEventListener('input', () => {
             if (confirmInput.classList.contains('input-error')) {
+                const matchError = signupDynamicContainer.querySelector('.password-match-error');
                 if (matchError) matchError.classList.remove('visible');
                 confirmInput.classList.remove('input-error');
             }
@@ -208,8 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         signupForm.addEventListener('submit', (e) => {
-            // NOTE: We do NOT preventDefault() immediately.
-            // We only prevent it if validation Fails.
+            // Note: We REMOVED the default preventDefault() to allow Django to work.
+            // We only prevent default if validation fails.
 
             const passwordInput = signupDynamicContainer.querySelector('.signup-password');
             const confirmInput = signupDynamicContainer.querySelector('.signup-confirm-password');
@@ -217,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let isValid = true;
 
-            // 1. Email Check
+            // Email Validation
             if (emailInput) {
                 const email = emailInput.value;
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -230,14 +245,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // 2. Password Check
+            // Password Validation
             if (passwordInput && confirmInput) {
                 function checkStrength(password) {
                     let errors = [];
                     if (password.length < 8) errors.push("At least 8 characters");
-                    if (!/[A-Z]/.test(password)) errors.push("1 uppercase");
-                    if (!/[a-z]/.test(password)) errors.push("1 lowercase");
+                    if (!/[A-Z]/.test(password)) errors.push("1 uppercase letter");
+                    if (!/[a-z]/.test(password)) errors.push("1 lowercase letter");
                     if (!/[0-9]/.test(password)) errors.push("1 number");
+                    // if (!/[^A-Za-z0-9]/.test(password)) errors.push("and 1 special character");
                     return errors;
                 }
 
@@ -248,25 +264,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const strengthErrors = checkStrength(pwd);
                 if (strengthErrors.length > 0) {
-                    if (strengthError) {
-                        strengthError.textContent = "Password must include: " + strengthErrors.join(", ");
-                        strengthError.classList.add('visible');
-                    }
+                    strengthError.textContent = "Password must include: " + strengthErrors.join(", ");
+                    strengthError.classList.add('visible');
                     passwordInput.classList.add('input-error');
                     isValid = false;
                 }
 
                 if (pwd !== confirm) {
-                    if (matchError) matchError.classList.add('visible');
+                    matchError.classList.add('visible');
                     confirmInput.classList.add('input-error');
                     isValid = false;
                 }
             }
 
             if (!isValid) {
-                e.preventDefault(); // Stop submission if errors
+                e.preventDefault(); // Stop submission ONLY if errors exist
             }
-            // If Valid -> Browser sends POST request to Django
+            // If valid, do nothing. Browser will submit form to Django.
         });
     }
 
