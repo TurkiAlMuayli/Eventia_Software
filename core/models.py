@@ -15,11 +15,11 @@ class CustomUser(AbstractUser):
 
 
 # --- PROFILES ---
+
 class OrganizerProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='organizer_profile')
     organization_name = models.CharField(max_length=100)
-    # Optional: Add website or bio if in ERD
-    # website = models.URLField(blank=True)
+    # Bio/Website can go here if needed later
 
     def __str__(self):
         return self.organization_name
@@ -27,10 +27,9 @@ class OrganizerProfile(models.Model):
 
 class VendorProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='vendor_profile')
-    # Added organization_name because Vendors are also businesses
     organization_name = models.CharField(max_length=100, blank=True, null=True)
     service_type = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True) # Description is already here
 
     def __str__(self):
         return f"{self.user.username} - {self.service_type}"
@@ -38,7 +37,7 @@ class VendorProfile(models.Model):
 
 class AttendeeProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='attendee_profile')
-    # Added Gender because it is in your Signup Form
+
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
@@ -46,5 +45,50 @@ class AttendeeProfile(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
     date_of_birth = models.DateField(null=True, blank=True)
 
+    # Added Preferences field
+    #preferences = models.TextField(blank=True, null=True, help_text="User preferences for event types, dietary restrictions, etc.")
+
     def __str__(self):
         return self.user.username
+
+
+# --- EVENT MODEL ---
+
+class Event(models.Model):
+    # Choices for Status
+    STATUS_CHOICES = (
+        ('UPCOMING', 'Upcoming'),
+        ('COMPLETED', 'Completed'),
+        ('CANCELLED', 'Cancelled'),
+    )
+
+    # Choices for Approval
+    APPROVAL_CHOICES = (
+        ('PENDING', 'Pending'),
+        ('APPROVED', 'Approved'),
+        ('REJECTED', 'Rejected'),
+    )
+
+    # Event_ID is handled automatically by Django as the primary key 'id'
+
+    # We link the event to an Organizer (assuming only organizers create events)
+    organizer = models.ForeignKey(OrganizerProfile, on_delete=models.CASCADE, related_name='events')
+
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='UPCOMING')
+    category = models.CharField(max_length=100)
+
+    capacity = models.PositiveIntegerField()
+    age_restriction = models.PositiveIntegerField(default=0, help_text="Minimum age required (0 for no restriction)")
+
+    date = models.DateField()
+    time = models.TimeField()
+
+    approval = models.CharField(max_length=20, choices=APPROVAL_CHOICES, default='PENDING')
+    location = models.CharField(max_length=255) # Can be an address or Google Maps link
+
+    ticket_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+
+    def __str__(self):
+        return self.title
