@@ -1,11 +1,12 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log In | Eventia</title>
+    <title>Eventia | Events Management Platform</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -15,7 +16,6 @@
 
 <body>
 
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="container nav-container">
             <a href="{% url 'dashboard' %}" class="logo" id="nav-logo">
@@ -23,55 +23,89 @@
             </a>
             <div class="nav-links">
                 <a href="{% url 'dashboard' %}" class="btn-text" id="nav-home-btn">Home</a>
+                <a href="{% url 'login_attendee' %}" class="btn btn-outline" id="nav-login-btn">Log In</a>
                 <a href="{% url 'signup_attendee' %}" class="btn btn-primary" id="nav-signup-btn">Sign Up</a>
             </div>
         </div>
     </nav>
 
-    <!-- MAIN APP CONTAINER -->
     <main class="main-content">
 
-        <!-- Background Elements -->
         <div class="bg-shape shape-1"></div>
         <div class="bg-shape shape-2"></div>
 
-        <!-- LOGIN VIEW -->
-        <section id="login-view" class="view-section active">
-            <div class="auth-form-container" id="login-form-container">
-                <div class="form-header">
-                    <h2>Welcome Back</h2>
-                    <p>Login as an Attendee</p>
+        <section id="guest-view" class="view-section active">
+
+            <div class="hero-section">
+                <div class="hero-text">
+                    <h1>Discover & Manage <br><span>Exceptional Events</span></h1>
+                    <p>The centralized platform for seamless event management in Saudi Arabia. Connect with organizers, vendors, and attendees in one place.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" id="hero-browse-btn">Browse Events</button>
+                        <a href="{% url 'signup_attendee' %}" class="btn btn-outline" id="hero-create-btn">Create Event</a>
+                    </div>
                 </div>
-
-                <form id="login-form" method="POST">
-                    {% csrf_token %}
-                    <div class="input-group">
-                        <label for="login-email">Email Address or Phone Number</label>
-                        <input type="text" name="username" id="login-email" placeholder="" required>
+                <div class="hero-image-placeholder">
+                    <div class="abstract-card card-1">
+                        <i class="fa-solid fa-calendar-star"></i>
+                        <span>Premium Events</span>
                     </div>
-                    <div class="input-group">
-                        <label for="login-password">Password</label>
-                        <input type="password" name="password" id="login-password" placeholder="••••••••" required>
+                    <div class="abstract-card card-2">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Networking</span>
                     </div>
-
-                    <div class="form-actions">
-                        <label class="checkbox-container">
-                            <input type="checkbox"> Remember me
-                        </label>
-                        <a href="#" class="forgot-password">Forgot Password?</a>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                </form>
-
-                <div class="vendor-organizer-link">
-                    <p>Are you a vendor or organizer?</p>
-                    <a href="{% url 'login_business' %}" class="btn btn-outline btn-sm">Sign in as Vendor or Organizer</a>
                 </div>
+            </div>
 
-                <div class="form-footer">
-                    <p>New to Eventia? <a href="{% url 'signup_attendee' %}" id="link-to-signup">Create an account</a></p>
-                    <a href="{% url 'dashboard' %}" class="back-to-home">Back to Home</a>
+            <div class="events-container">
+                <h2 class="section-title">Upcoming Events</h2>
+                <div class="events-grid">
+
+                    <div class="event-card">
+                        <div class="event-image" style="background-color: #e3f2fd;">
+                            <i class="fa-solid fa-laptop-code"></i>
+                        </div>
+                        <div class="event-details">
+                            <span class="event-badge">Tech</span>
+                            <h3>Future Tech Summit 2026</h3>
+                            <div class="event-meta">
+                                <span><i class="fa-regular fa-calendar"></i> Oct 15, 2026</span>
+                                <span><i class="fa-solid fa-location-dot"></i> Riyadh Front</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline">View Details</button>
+                        </div>
+                    </div>
+
+                    <div class="event-card">
+                        <div class="event-image" style="background-color: #f3e5f5;">
+                            <i class="fa-solid fa-palette"></i>
+                        </div>
+                        <div class="event-details">
+                            <span class="event-badge">Art</span>
+                            <h3>Riyadh Art Week</h3>
+                            <div class="event-meta">
+                                <span><i class="fa-regular fa-calendar"></i> Nov 02, 2026</span>
+                                <span><i class="fa-solid fa-location-dot"></i> JAX District</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline">View Details</button>
+                        </div>
+                    </div>
+
+                    <div class="event-card">
+                        <div class="event-image" style="background-color: #e8f5e9;">
+                            <i class="fa-solid fa-briefcase"></i>
+                        </div>
+                        <div class="event-details">
+                            <span class="event-badge">Business</span>
+                            <h3>Global Investors Forum</h3>
+                            <div class="event-meta">
+                                <span><i class="fa-regular fa-calendar"></i> Dec 10, 2026</span>
+                                <span><i class="fa-solid fa-location-dot"></i> KAFD</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline">View Details</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>

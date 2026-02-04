@@ -1,21 +1,16 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log In | Eventia</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
 
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="container nav-container">
             <a href="{% url 'dashboard' %}" class="logo" id="nav-logo">
@@ -28,61 +23,49 @@
         </div>
     </nav>
 
-    <!-- MAIN APP CONTAINER -->
-    <main class="main-content">
-
-        <!-- Background Elements -->
+    <main class="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
         <div class="bg-shape shape-1"></div>
         <div class="bg-shape shape-2"></div>
 
-        <!-- LOGIN VIEW -->
-        <section id="login-view" class="view-section active">
-            <div class="auth-form-container" id="login-form-container">
-                <div class="form-header">
-                    <h2>Welcome Back</h2>
-                    <p>Login as an Attendee</p>
-                </div>
-
-                <form id="login-form" method="POST">
-                    {% csrf_token %}
-
-                    <div class="input-group">
-                        <label for="login-email">Email Address or Phone Number</label>
-                        <input type="text" name="username" id="login-email" placeholder="" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="login-password">Password</label>
-                        <input type="password" name="password" id="login-password" placeholder="••••••••" required>
-                    </div>
-
-                    <div class="form-actions">
-                        <label class="checkbox-container">
-                            <input type="checkbox"> Remember me
-                        </label>
-                        <a href="#" class="forgot-password">Forgot Password?</a>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block">
-                        Sign In
-                    </button>
-                </form>
-
-                <div class="vendor-organizer-link">
-                    <p>Are you a vendor or organizer?</p>
-                    <a href="{% url 'login_business' %}" class="btn btn-outline btn-sm">Sign in as Vendor or Organizer</a>
-                </div>
-
-                <div class="form-footer">
-                    <p>New to Eventia? <a href="{% url 'signup_attendee' %}" id="link-to-signup">Create an account</a></p>
-                    <a href="{% url 'dashboard' %}" class="back-to-home">Back to Home</a>
-                </div>
+        <div id="login-form-container" class="auth-form-container">
+            <div class="form-header">
+                <h2>Welcome Back</h2>
+                <p>Login as an Attendee</p>
             </div>
-        </section>
 
+            <form id="login-form" method="POST">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="login-email">Email Address or Phone Number</label>
+                    <input type="text" name="username" id="login-email" placeholder="" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" name="password" id="login-password" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-actions">
+                    <label class="checkbox-container">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </form>
+
+            <div class="vendor-organizer-link">
+                <p>Are you a vendor or organizer?</p>
+                <a href="{% url 'login_business' %}" class="btn btn-outline btn-sm">Sign in as Vendor or Organizer</a>
+            </div>
+
+            <div class="form-footer">
+                <p>New to Eventia? <a href="{% url 'signup_attendee' %}" id="link-to-signup">Create an account</a></p>
+                <a href="{% url 'dashboard' %}" class="back-to-home">Back to Home</a>
+            </div>
+        </div>
     </main>
 
     <script src="{% static 'js/app.js' %}"></script>
 </body>
-
 </html>

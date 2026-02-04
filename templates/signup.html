@@ -1,21 +1,16 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up | Eventia</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
 
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="container nav-container">
             <a href="{% url 'dashboard' %}" class="logo" id="nav-logo">
@@ -28,49 +23,35 @@
         </div>
     </nav>
 
-    <!-- MAIN APP CONTAINER -->
-    <main class="main-content">
-
-        <!-- Background Elements -->
+    <main class="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 2rem 0;">
         <div class="bg-shape shape-1"></div>
         <div class="bg-shape shape-2"></div>
 
-        <!-- SIGNUP VIEW -->
-        <section id="signup-view" class="view-section active">
-            <div class="auth-form-container" id="signup-form-container">
-                <div class="form-header">
-                    <h2>Create Account</h2>
-                    <p>Join Eventia as an Attendee</p>
-                </div>
-
-                <form id="signup-form" data-role="attendee" method="POST">
-                    {% csrf_token %}
-
-                    <!-- Dynamic Fields -->
-                    <div id="signup-dynamic-fields">
-                        <!-- Injected via JS -->
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block">
-                        Sign Up
-                    </button>
-                </form>
-
-                <div class="vendor-organizer-link">
-                    <p>Want to host or provide services?</p>
-                    <a href="{% url 'signup_business' %}" class="btn btn-outline btn-sm">Sign up as Vendor or Organizer</a>
-                </div>
-
-                <div class="form-footer">
-                    <p>Already have an account? <a href="{% url 'login_attendee' %}" id="link-to-login">Log in</a></p>
-                    <a href="{% url 'dashboard' %}" class="back-to-home">Back to Home</a>
-                </div>
+        <div id="signup-form-container" class="auth-form-container">
+            <div class="form-header">
+                <h2>Create Account</h2>
+                <p>Join Eventia as an Attendee</p>
             </div>
-        </section>
 
+            <form id="signup-form" data-role="attendee" method="POST">
+                {% csrf_token %}
+                <div id="signup-dynamic-fields">
+                    </div>
+                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+            </form>
+
+            <div class="vendor-organizer-link">
+                <p>Want to host or provide services?</p>
+                <a href="{% url 'signup_business' %}" class="btn btn-outline btn-sm">Sign up as Vendor or Organizer</a>
+            </div>
+
+            <div class="form-footer">
+                <p>Already have an account? <a href="{% url 'login_attendee' %}" id="link-to-login">Log in</a></p>
+                <a href="{% url 'dashboard' %}" class="back-to-home">Back to Home</a>
+            </div>
+        </div>
     </main>
 
     <script src="{% static 'js/app.js' %}"></script>
 </body>
-
 </html>
