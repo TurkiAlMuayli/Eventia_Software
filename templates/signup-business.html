@@ -1,59 +1,38 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Business Sign Up | Eventia</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
 
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="logo" id="nav-logo">
+            <a href="{% url 'dashboard' %}" class="logo" id="nav-logo">
                 <img src="{% static 'assets/logo_fixed.png' %}" alt="Eventia Logo" class="logo-img">
             </a>
             <div class="nav-links">
                 <a href="{% url 'dashboard' %}" class="btn-text">Home</a>
                 <a href="{% url 'login_business' %}" class="btn btn-outline">Log In</a>
             </div>
-
-            <div class="attendee-link">
-                <a href="{% url 'signup_attendee' %}" class="btn btn-outline btn-sm">Sign up as Attendee</a>
-            </div>
-
-            <div class="form-footer">
-                <p>Already have an account? <a href="{% url 'login_business' %}" id="link-to-login">Log in</a></p>
-                <a href="{% url 'dashboard' %}" class="back-to-home">Back to Home</a>
-            </div>
         </div>
     </nav>
 
-    <!-- MAIN APP CONTAINER -->
-    <main class="main-content"
-        style="display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 2rem 0;">
-
-        <!-- Background Elements -->
+    <main class="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 2rem 0;">
         <div class="bg-shape shape-1"></div>
         <div class="bg-shape shape-2"></div>
 
-        <!-- BUSINESS SIGNUP FORM -->
         <div id="signup-form-container" class="auth-form-container">
             <div class="form-header">
                 <h2>Business Account</h2>
                 <p>Register as a Vendor or Organizer</p>
             </div>
 
-            <!-- Role Selector for Business Signup -->
             <div class="role-selector">
                 <label>Register as:</label>
                 <div class="role-tabs">
@@ -63,12 +42,9 @@
             </div>
 
             <form id="signup-form" method="POST">
-
                 {% csrf_token %}
-
                 <div id="signup-dynamic-fields">
                     </div>
-
                 <button type="submit" class="btn btn-primary btn-block">
                     Sign Up as <span class="current-role-text">Organizer</span>
                 </button>
@@ -76,18 +52,16 @@
 
             <div class="attendee-link">
                 <p>Just want to attend events?</p>
-                <a href="signup.html" class="btn btn-outline btn-sm">Sign up as Attendee</a>
+                <a href="{% url 'signup_attendee' %}" class="btn btn-outline btn-sm">Sign up as Attendee</a>
             </div>
 
             <div class="form-footer">
-                <p>Already have an account? <a href="login.html" id="link-to-login">Log in</a></p>
-                <a href="index.html" class="back-to-home">Back to Home</a>
+                <p>Already have an account? <a href="{% url 'login_business' %}" id="link-to-login">Log in</a></p>
+                <a href="{% url 'dashboard' %}" class="back-to-home">Back to Home</a>
             </div>
         </div>
-
     </main>
 
     <script src="{% static 'js/app.js' %}"></script>
 </body>
-
 </html>
