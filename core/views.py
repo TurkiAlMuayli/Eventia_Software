@@ -9,9 +9,14 @@ def signup_view(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user) # Auto-login after signup
-            messages.success(request, f"Welcome, {user.username}!")
-            return redirect('dashboard') # Redirect to home/dashboard
+
+            if not request.user.is_authenticated:
+                login(request, user)
+                messages.success(request, f"Welcome, {user.username}!")
+            else:
+                messages.info(request, f"User {user.username} was created successfully. You are still logged in as {request.user.username}.")
+
+            return redirect('dashboard')
         else:
             messages.error(request, "Please correct the errors below.")
     else:

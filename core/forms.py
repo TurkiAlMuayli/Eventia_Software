@@ -10,11 +10,9 @@ class SignUpForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput)
     role = forms.ChoiceField(choices=User.ROLE_CHOICES)
 
-
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
     gender = forms.ChoiceField(choices=[('M', 'Male'), ('F', 'Female')], required=False)
-
 
     organization_name = forms.CharField(required=False)
     service_type = forms.CharField(required=False)
@@ -33,7 +31,6 @@ class SignUpForm(forms.ModelForm):
         if password != confirm_password:
             raise forms.ValidationError("Passwords do not match")
 
-
         if role == 'ORGANIZER' and not cleaned_data.get('organization_name'):
             self.add_error('organization_name', 'Organization Name is required for Organizers.')
 
@@ -43,7 +40,6 @@ class SignUpForm(forms.ModelForm):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])
 
-
         user.first_name = self.cleaned_data.get("first_name", "")
         user.last_name = self.cleaned_data.get("last_name", "")
 
@@ -51,23 +47,19 @@ class SignUpForm(forms.ModelForm):
             user.save()
             role = self.cleaned_data.get('role')
 
-
-
             if role == 'ORGANIZER':
-                OrganizerProfile.objects.create(
-                    user=user,
-                    organization_name=self.cleaned_data.get('organization_name')
-                )
+                profile, created = OrganizerProfile.objects.get_or_create(user=user)
+                profile.organization_name = self.cleaned_data.get('organization_name')
+                profile.save()
+
             elif role == 'VENDOR':
-                VendorProfile.objects.create(
-                    user=user,
-                    service_type=self.cleaned_data.get('service_type'),
-                    organization_name=self.cleaned_data.get('organization_name')
-                )
+                profile, created = VendorProfile.objects.get_or_create(user=user)
+                profile.service_type = self.cleaned_data.get('service_type')
+                profile.organization_name = self.cleaned_data.get('organization_name')
+                profile.save()
+
             elif role == 'ATTENDEE':
-
                 profile, created = AttendeeProfile.objects.get_or_create(user=user)
-
                 profile.date_of_birth = self.cleaned_data.get('date_of_birth')
                 profile.gender = self.cleaned_data.get('gender')
                 profile.save()
