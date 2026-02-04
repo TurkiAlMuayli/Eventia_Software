@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | Eventia</title>
+    <title>Business Sign Up | Eventia</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -37,14 +37,23 @@
         <div class="bg-shape shape-1"></div>
         <div class="bg-shape shape-2"></div>
 
-        <!-- SIGNUP FORM -->
+        <!-- BUSINESS SIGNUP FORM -->
         <div id="signup-form-container" class="auth-form-container">
             <div class="form-header">
-                <h2>Create Account</h2>
-                <p>Join Eventia as an Attendee</p>
+                <h2>Business Account</h2>
+                <p>Register as a Vendor or Organizer</p>
             </div>
 
-            <form id="signup-form" data-role="attendee" method="POST">
+            <!-- Role Selector for Business Signup -->
+            <div class="role-selector">
+                <label>Register as:</label>
+                <div class="role-tabs">
+                    <div class="role-tab active" data-target="signup" data-role="organizer">Organizer</div>
+                    <div class="role-tab" data-target="signup" data-role="vendor">Vendor</div>
+                </div>
+            </div>
+
+            <form id="signup-form" method="POST">
 
                 {% csrf_token %}
 
@@ -52,13 +61,13 @@
                     </div>
 
                 <button type="submit" class="btn btn-primary btn-block">
-                    Sign Up
+                    Sign Up as <span class="current-role-text">Organizer</span>
                 </button>
             </form>
 
-            <div class="vendor-organizer-link">
-                <p>Want to host or provide services?</p>
-                <a href="signup-business.html" class="btn btn-outline btn-sm">Sign up as Vendor or Organizer</a>
+            <div class="attendee-link">
+                <p>Just want to attend events?</p>
+                <a href="signup.html" class="btn btn-outline btn-sm">Sign up as Attendee</a>
             </div>
 
             <div class="form-footer">

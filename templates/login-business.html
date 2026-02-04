@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log In | Eventia</title>
+    <title>Business Log In | Eventia</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
             </a>
             <div class="nav-links">
                 <a href="index.html" class="btn-text">Home</a>
-                <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                <a href="signup-business.html" class="btn btn-primary">Sign Up</a>
             </div>
         </div>
     </nav>
@@ -36,11 +36,20 @@
         <div class="bg-shape shape-1"></div>
         <div class="bg-shape shape-2"></div>
 
-        <!-- LOGIN FORM -->
+        <!-- BUSINESS LOGIN FORM -->
         <div id="login-form-container" class="auth-form-container">
             <div class="form-header">
-                <h2>Welcome Back</h2>
-                <p>Login as an Attendee</p>
+                <h2>Business Login</h2>
+                <p>Access your vendor or organizer dashboard</p>
+            </div>
+
+            <!-- Role Selector for Business Login -->
+            <div class="role-selector">
+                <label>I am a(n):</label>
+                <div class="role-tabs">
+                    <div class="role-tab active" data-target="login" data-role="organizer">Organizer</div>
+                    <div class="role-tab" data-target="login" data-role="vendor">Vendor</div>
+                </div>
             </div>
 
             <form id="login-form" method="POST">
@@ -67,17 +76,17 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block">
-                    Sign In
+                    Sign In as <span class="current-role-text">Organizer</span>
                 </button>
             </form>
 
-            <div class="vendor-organizer-link">
-                <p>Are you a vendor or organizer?</p>
-                <a href="login-business.html" class="btn btn-outline btn-sm">Sign in as Vendor or Organizer</a>
+            <div class="attendee-link">
+                <p>Just looking to attend events?</p>
+                <a href="login.html" class="btn btn-outline btn-sm">Sign in as Attendee</a>
             </div>
 
             <div class="form-footer">
-                <p>New to Eventia? <a href="signup.html" id="link-to-signup">Create an account</a></p>
+                <p>New to Eventia? <a href="signup-business.html" id="link-to-signup">Create a business account</a></p>
                 <a href="index.html" class="back-to-home">Back to Home</a>
             </div>
         </div>
