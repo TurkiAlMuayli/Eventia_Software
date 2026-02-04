@@ -22,10 +22,21 @@
             <a href="index.html" class="logo" id="nav-logo">
                 <img src="{% static 'assets/logo_fixed.png' %}" alt="Eventia Logo" class="logo-img">
             </a>
+
             <div class="nav-links">
-                <a href="index.html" class="btn-text">Home</a>
-                <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                <a href="{% url 'dashboard' %}" class="btn-text">Home</a>
+                <a href="{% url 'signup_attendee' %}" class="btn btn-primary">Sign Up</a>
             </div>
+
+            <div class="vendor-organizer-link">
+                <a href="{% url 'login_business' %}" class="btn btn-outline btn-sm">Sign in as Vendor or Organizer</a>
+            </div>
+
+            <div class="form-footer">
+                <p>New to Eventia? <a href="{% url 'signup_attendee' %}" id="link-to-signup">Create an account</a></p>
+                <a href="{% url 'dashboard' %}" class="back-to-home">Back to Home</a>
+            </div>
+
         </div>
     </nav>
 

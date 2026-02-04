@@ -23,9 +23,14 @@
                 <img src="{% static 'assets/logo_fixed.png' %}" alt="Eventia Logo" class="logo-img">
             </a>
             <div class="nav-links">
-                <a href="index.html" class="btn-text" id="nav-home-btn">Home</a>
-                <a href="login.html" class="btn btn-outline" id="nav-login-btn">Log In</a>
-                <a href="signup.html" class="btn btn-primary" id="nav-signup-btn">Sign Up</a>
+                <a href="{% url 'dashboard' %}" class="btn-text" id="nav-home-btn">Home</a>
+                <a href="{% url 'login_attendee' %}" class="btn btn-outline" id="nav-login-btn">Log In</a>
+                <a href="{% url 'signup_attendee' %}" class="btn btn-primary" id="nav-signup-btn">Sign Up</a>
+            </div>
+
+            <div class="hero-buttons">
+                <button class="btn btn-primary" id="hero-browse-btn">Browse Events</button>
+                <a href="{% url 'signup_attendee' %}" class="btn btn-outline" id="hero-create-btn">Create Event</a>
             </div>
         </div>
     </nav>
