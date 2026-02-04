@@ -24,6 +24,7 @@
     </nav>
 
     <main class="main-content" style="display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 2rem 0;">
+
         <div class="bg-shape shape-1"></div>
         <div class="bg-shape shape-2"></div>
 
@@ -35,21 +36,25 @@
 
             <form id="signup-form" data-role="attendee" method="POST">
                 {% csrf_token %}
+
                 <div id="signup-dynamic-fields">
                     </div>
-                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    Sign Up
+                </button>
             </form>
 
             <div class="vendor-organizer-link">
                 <p>Want to host or provide services?</p>
                 <a href="{% url 'signup_business' %}" class="btn btn-outline btn-sm">Sign up as Vendor or Organizer</a>
             </div>
-
             <div class="form-footer">
                 <p>Already have an account? <a href="{% url 'login_attendee' %}" id="link-to-login">Log in</a></p>
                 <a href="{% url 'dashboard' %}" class="back-to-home">Back to Home</a>
             </div>
         </div>
+
     </main>
 
     <script src="{% static 'js/app.js' %}"></script>
