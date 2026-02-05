@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Role Management (Login & Signup) ---
     const roleFields = {
-        organizer: `
+        organizer: \`
             <input type="hidden" name="role" value="ORGANIZER">
             <div class="input-group">
                 <label>Username</label>
@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="password" name="confirm_password" class="signup-confirm-password" placeholder="Re-enter password" required>
                 <div class="error-message password-match-error">Passwords do not match</div>
             </div>
-        `,
-        vendor: `
+        \`,
+        vendor: \`
             <input type="hidden" name="role" value="VENDOR">
             <div class="input-group">
                 <label>Username</label>
@@ -87,8 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="password" name="confirm_password" class="signup-confirm-password" placeholder="Re-enter password" required>
                 <div class="error-message password-match-error">Passwords do not match</div>
             </div>
-        `,
-        attendee: `
+        \`,
+        attendee: \`
             <div class="form-row">
                 <div class="input-group">
                     <label>First Name</label>
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="password" name="confirm_password" class="signup-confirm-password" placeholder="Re-enter password" required>
                 <div class="error-message password-match-error">Passwords do not match</div>
             </div>
-        `
+        \`
     };
 
     const roleTabs = document.querySelectorAll('.role-tab');
