@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="text" name="username" placeholder="vendor123" required>
             </div>
             <div class="input-group">
-                <label>Organization Name</label>
+                <label>Vendor Name</label>
                 <input type="text" name="organization_name" placeholder="Event Services Ltd." required>
             </div>
             <div class="input-group">
@@ -112,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <label>Phone Number</label>
                 <input type="tel" name="phone_number" placeholder="+966 5x xxx xxxx" required>
             </div>
-
             <div class="input-group">
                 <label>Gender</label>
                 <select name="gender" required>
@@ -121,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <option value="F">Female</option>
                 </select>
             </div>
-
             <div class="input-group">
                 <label>Birthday</label>
                 <div class="date-inputs-wrapper">
@@ -152,10 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     </select>
                     <select name="year" class="date-select year-select" required>
                         <option value="" disabled selected>Year</option>
-                        </select>
+                    </select>
                 </div>
             </div>
-
             <div class="input-group">
                 <label>Password</label>
                 <input type="password" name="password" class="signup-password" placeholder="Create a strong password" required>
