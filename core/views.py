@@ -42,7 +42,7 @@ def signup_attendee(request):
             messages.error(request, "Please correct the errors below.")
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'core/signup.html', {'form': form})
 
 
 def login_attendee(request):
@@ -54,7 +54,7 @@ def login_attendee(request):
             return redirect('dashboard')
     else:
         form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'core/login.html', {'form': form})
 
 
 # --- BUSINESS VIEWS (Organizer, Vendor, SCEGA) ---
@@ -71,7 +71,7 @@ def signup_business(request):
             messages.error(request, "Please correct the errors below.")
     else:
         form = SignUpForm()
-    return render(request, 'signup-business.html', {'form': form})
+    return render(request, 'core/signup-business.html', {'form': form})
 
 
 def login_business(request):
@@ -85,7 +85,7 @@ def login_business(request):
             messages.error(request, "Invalid credentials.")
     else:
         form = AuthenticationForm()
-    return render(request, 'login-business.html', {'form': form})
+    return render(request, 'core/login-business.html', {'form': form})
 
 
 # --- DASHBOARDS ---
