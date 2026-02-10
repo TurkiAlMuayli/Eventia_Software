@@ -6,6 +6,7 @@ class CustomUser(AbstractUser):
         ('ORGANIZER', 'Organizer'),
         ('VENDOR', 'Vendor'),
         ('ATTENDEE', 'Attendee'),
+        ('SCEGA_ADMIN', 'SCEGA Admin'),  # 1. Added Role
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='ATTENDEE')
     phone_number = models.CharField(max_length=15, blank=True, null=True)
@@ -55,25 +56,17 @@ class AttendeeProfile(models.Model):
 # --- EVENT MODEL ---
 
 class Event(models.Model):
-    # Choices for Status
-    STATUS_CHOICES = (
-        ('UPCOMING', 'Upcoming'),
-        ('COMPLETED', 'Completed'),
-        ('CANCELLED', 'Cancelled'),
-    )
 
     # Choices for Approval
+    STATUS_CHOICES = (('UPCOMING', 'Upcoming'), ('COMPLETED', 'Completed'), ('CANCELLED', 'Cancelled'))
     APPROVAL_CHOICES = (
-        ('PENDING', 'Pending'),
+        ('PENDING', 'Pending License'),
         ('APPROVED', 'Approved'),
-        ('REJECTED', 'Rejected'),
+        ('REJECTED', 'Rejected')
     )
 
-    # Event_ID is handled automatically by Django as the primary key 'id'
-
-    # We link the event to an Organizer (assuming only organizers create events)
-    organizer = models.ForeignKey(OrganizerProfile, on_delete=models.CASCADE, related_name='events')
-
+    organizer = models.ForeignKey('OrganizerProfile', on_delete=models.CASCADE, related_name='events')
+    approval = models.CharField(max_length=20, choices=APPROVAL_CHOICES, default='PENDING')  # Default is Pending
     title = models.CharField(max_length=200)
     description = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='UPCOMING')

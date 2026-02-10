@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCEGA Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-brand">SCEGA ADMIN</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-view="overview">
+                <i class="fa-solid fa-grid-2"></i> Dashboard
+            </a>
+            <a href="#" class="nav-item" data-view="history">
+                <i class="fa-solid fa-clock-rotate-left"></i> History
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="{% url 'login' %}" class="nav-item"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <div class="header-left">
+                <i class="fa-solid fa-bars mobile-toggle" id="sidebar-toggle"></i>
+                <h1 id="page-title">Admin Dashboard</h1>
+            </div>
+            <div class="header-profile">
+                <span class="profile-name">Admin</span>
+            </div>
+        </header>
+
+        <section id="view-overview" class="content-section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>{{ pending_events.count }}</h3>
+                        <p>Pending Requests</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>Pending Events Queue</h2>
+            </div>
+
+            <div id="pending-events-cards" style="display: grid; gap: 1rem;">
+                {% for event in pending_events %}
+                <div class="event-list-item" style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.5rem;">
+                    <div class="event-info-main">
+                        <div>
+                            <h4 style="margin: 0 0 0.5rem 0; font-size: 1.2rem;">{{ event.title }}</h4>
+                            <div style="font-size: 0.9rem; color: #666;">
+                                <p><i class="fa-solid fa-user-tie"></i> <strong>Organizer:</strong> {{ event.organizer.organization_name }}</p>
+                                <p><i class="fa-solid fa-calendar"></i> {{ event.date }} | {{ event.time }}</p>
+                                <p><i class="fa-solid fa-align-left"></i> {{ event.description|truncatechars:100 }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-actions" style="display: flex; gap: 10px;">
+                        <form method="POST" action="{% url 'scega_dashboard' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="event_id" value="{{ event.id }}">
+                            <input type="hidden" name="action" value="approve">
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fa-solid fa-check"></i> Approve
+                            </button>
+                        </form>
+
+                        <form method="POST" action="{% url 'scega_dashboard' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="event_id" value="{{ event.id }}">
+                            <input type="hidden" name="action" value="reject">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa-solid fa-xmark"></i> Reject
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% empty %}
+                <div style="text-align: center; padding: 3rem;">
+                    <i class="fa-regular fa-circle-check" style="font-size: 3rem; color: #ddd;"></i>
+                    <p class="text-muted" style="margin-top: 1rem;">No pending requests.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section id="view-history" class="content-section">
+            <div class="section-header">
+                <h2>Decision History</h2>
+            </div>
+            <div id="history-events-cards">
+                {% for event in history_events %}
+                <div class="event-list-item">
+                    <div class="event-info-main">
+                        <div class="event-details-text">
+                            <h4>{{ event.title }}</h4>
+                            <div class="event-meta-info">
+                                <span>{{ event.organizer.organization_name }}</span>
+                                <span>{{ event.date }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        {% if event.approval == 'APPROVED' %}
+                            <span class="status-badge status-approved">Approved</span>
+                        {% else %}
+                            <span class="status-badge status-rejected">Rejected</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <p>No history available.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <script src="{% static 'js/dashboard-ui.js' %}"></script>
+</body>
+</html>

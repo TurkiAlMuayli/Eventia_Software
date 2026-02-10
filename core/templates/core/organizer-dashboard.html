@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Dashboard | Eventia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-brand">EVENTIA</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-view="overview">
+                <i class="fa-solid fa-grid-2"></i> Dashboard
+            </a>
+            <a href="#" class="nav-item" data-view="create-event">
+                <i class="fa-solid fa-circle-plus"></i> Create Event
+            </a>
+            <a href="#" class="nav-item" data-view="events-list">
+                <i class="fa-regular fa-calendar-days"></i> My Events
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="{% url 'login' %}" class="nav-item"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <div class="header-left" style="display: flex; align-items: center; gap: 1rem;">
+                <i class="fa-solid fa-bars mobile-toggle" id="sidebar-toggle"></i>
+                <h1 id="page-title">Dashboard Overview</h1>
+            </div>
+            <div class="header-profile">
+                <span class="profile-name">{{ user.username }}</span>
+                <div class="profile-avatar">{{ user.username|slice:":1"|upper }}</div>
+            </div>
+        </header>
+
+        <section id="view-overview" class="content-section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>{{ events.count }}</h3>
+                        <p>Total Events</p>
+                    </div>
+                </div>
+            </div>
+            <div class="section-header">
+                <h2>Recent Events</h2>
+            </div>
+            <div id="recent-events-list">
+                {% for event in events|slice:":3" %}
+                <div class="event-list-item">
+                    <div class="event-info-main">
+                        <div class="event-details-text">
+                            <h4>{{ event.title }}</h4>
+                            <div class="event-meta-info">
+                                <span>{{ event.date }}</span>
+                                {% if event.approval == 'PENDING' %}
+                                    <span class="status-badge status-pending">Pending License</span>
+                                {% elif event.approval == 'APPROVED' %}
+                                    <span class="status-badge status-approved">Approved</span>
+                                {% elif event.approval == 'REJECTED' %}
+                                    <span class="status-badge status-rejected">Rejected</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No events yet.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section id="view-create-event" class="content-section">
+            <form method="POST" action="{% url 'organizer_dashboard' %}">
+                {% csrf_token %}
+                <div class="form-section">
+                    <h3 class="form-section-title">Basic Information</h3>
+                    <div class="input-group">
+                        <label>Event Title</label>
+                        <input type="text" name="title" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Category</label>
+                        <select name="category" required>
+                            <option value="Tech">Tech</option>
+                            <option value="Art">Art</option>
+                            <option value="Music">Music</option>
+                            <option value="Business">Business</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3 class="form-section-title">Date & Time</h3>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Date</label>
+                            <input type="date" name="date" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Time</label>
+                            <input type="time" name="time" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Location</label>
+                        <input type="text" name="location" required>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="input-group">
+                        <label>Description</label>
+                        <textarea name="description" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Publish Event</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="view-events-list" class="content-section">
+            <div id="all-events-container">
+                {% for event in events %}
+                <div class="event-list-item">
+                    <div class="event-info-main">
+                        <div class="event-date-box">
+                            <span class="date-day">{{ event.date|date:"d" }}</span>
+                            <span class="date-month">{{ event.date|date:"M" }}</span>
+                        </div>
+                        <div class="event-details-text">
+                            <h4>{{ event.title }}</h4>
+                            <div class="event-meta-info">
+                                <span><i class="fa-regular fa-clock"></i> {{ event.time }}</span>
+                                <span><i class="fa-solid fa-location-dot"></i> {{ event.location }}</span>
+                                {% if event.approval == 'PENDING' %}
+                                    <span class="status-badge status-pending">Pending License</span>
+                                {% elif event.approval == 'APPROVED' %}
+                                    <span class="status-badge status-approved">Approved</span>
+                                {% elif event.approval == 'REJECTED' %}
+                                    <span class="status-badge status-rejected">Rejected</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p style="text-align:center; padding: 2rem;">No events found.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <script src="{% static 'js/dashboard-ui.js' %}"></script>
+</body>
+</html>
