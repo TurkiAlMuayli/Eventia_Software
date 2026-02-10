@@ -93,7 +93,7 @@ def login_business(request):
 @login_required
 def dashboard_view(request):
     """General Dashboard for Attendees"""
-    return render(request, 'index.html')
+    return render(request, 'core/index.html')
 
 
 @login_required
