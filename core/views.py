@@ -130,12 +130,12 @@ def organizer_dashboard(request):
             status='UPCOMING'
         )
         messages.success(request, "Event created! Waiting for SCEGA approval.")
-        return redirect('organizer_dashboard')
+        return redirect('core/organizer_dashboard')
 
     # Fetch events for this organizer
     my_events = Event.objects.filter(organizer=organizer_profile).order_by('-date')
 
-    return render(request, 'organizer-dashboard.html', {
+    return render(request, 'core/organizer-dashboard.html', {
         'events': my_events
     })
 
@@ -161,13 +161,13 @@ def scega_dashboard(request):
             event.status = 'CANCELLED'  # Or keep as upcoming but rejected
 
         event.save()
-        return redirect('scega_dashboard')
+        return redirect('core/scega_dashboard')
 
     # Fetch Lists
     pending_events = Event.objects.filter(approval='PENDING').order_by('date')
     history_events = Event.objects.exclude(approval='PENDING').order_by('-date')
 
-    return render(request, 'scega-dashboard.html', {
+    return render(request, 'core/scega-dashboard.html', {
         'pending_events': pending_events,
         'history_events': history_events
     })
